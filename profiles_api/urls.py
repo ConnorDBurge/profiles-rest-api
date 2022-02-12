@@ -4,7 +4,11 @@ from . import views
 
 # API View Set uses the DefaultRouter
 router = DefaultRouter()
+# /api/hello-viewset/
 router.register('hello-viewset', views.HelloViewSet, basename='hello-viewset')
+# /api/profile/ (GET, POST)
+# /api/profile/:id (GET, POST, PUT, PATCH, DELETE)
+router.register('profile', views.UserProfileViewSet) # basename not required when providing a queryset
 
 # APIView uses urlpatterns to route HTTP methods
 urlpatterns = [

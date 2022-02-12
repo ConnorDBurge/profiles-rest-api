@@ -1,5 +1,39 @@
 from rest_framework import serializers
+from .models import UserProfile
 
 class HelloSerializer(serializers.Serializer):
+    """Test serializer"""
     """Serializes a name field for testing out API view"""
     name = serializers.CharField(max_length=10) # post expects a 'name' to be passed
+    
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    """Serializes a user profile object"""
+    class Meta:
+        model = UserProfile
+        fields = ('id','email','name','password')
+        extra_kwargs = {
+            'password': {
+                'write_only': True, # users wont be able to GET the password
+                'style': { # makes the ••• show up when typing the password
+                    'input_type': 'password',
+                }
+            }
+        }
+    
+    def create(self, validated_data):
+        """Create a new user profile"""
+        user = UserProfile.objects.create_user(
+            email = validated_data['email'],
+            name = validated_data['name'],
+            password = validated_data['password']
+        )
+        return user
+    
+    def update(self, instance, validated_data):
+        """Handle updating user account"""
+        if 'password' in validated_data:
+            password = validated_data.pop('password')
+            instance.set_password(password)
+    
+        return super().update(instance, validated_data)
