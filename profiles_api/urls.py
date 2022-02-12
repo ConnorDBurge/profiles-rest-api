@@ -13,5 +13,6 @@ router.register('profile', views.UserProfileViewSet) # basename not required whe
 # APIView uses urlpatterns to route HTTP methods
 urlpatterns = [
     path('hello-view/', views.HelloApiView.as_view(), name='hello-view'),
+    path('login/', views.UserLoginApiView.as_view(), name='login'),
     path('', include(router.urls)), # for API View Set
 ]
